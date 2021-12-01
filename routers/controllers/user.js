@@ -26,7 +26,7 @@ const resgister = async (req, res) => {
   };
   const login = (req, res) => {
     const { username, email, password } = req.body;
-    const SECRET_KEY = process.env.SECRET_KEY;
+    const secret = process.env.secret;
     const savedEmail = email?.toLowerCase();
     userModel
       .findOne({$or: [
@@ -42,7 +42,7 @@ const resgister = async (req, res) => {
             const options = {
               expiresIn: 60 * 60,
             };
-            const token = jwt.sign(payload, SECRET_KEY, options);
+            const token = jwt.sign(payload, secret, options);
             const unhashPassword = await bcrypt.compare(
               password,
               result.password
