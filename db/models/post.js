@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const post = new mongoose.Schema({
-  desc: { type: String, required: true },
   img: { type: String },
+  desc: { type: String, required: true },
   isDelet: { type: Boolean, default: false },
   isLik: { type: mongoose.Schema.Types.ObjectId, ref: "Like" },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
