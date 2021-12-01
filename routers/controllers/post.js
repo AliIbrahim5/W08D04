@@ -1,6 +1,5 @@
 const postmodel = require("../../db/models/post");
-
-
+// انشاء بوست جديد
 const newPost = (req, res) => {
   const { img, desc } = req.body;
   const { _id } = req.params;
@@ -24,7 +23,7 @@ const newPost = (req, res) => {
   }
 };
 
-// soft delete post
+// تعديل على البوست عن طريق سوفت ديليت
 const softDel = (req, res) => {
   const { _id } = req.params;
   try {
@@ -98,7 +97,7 @@ const softDel = (req, res) => {
   }
 };
 
-// epdate post
+// التعديل على البوست
 const updatePost = (req, res) => {
   const { _id } = req.params;
   const { desc } = req.body;
@@ -134,7 +133,7 @@ const updatePost = (req, res) => {
   }
 };
 
-// get post all
+// اظهار كل البوستات لليوزر
 const geAllPost = (req, res) => {
   try {
     postmodel.find({ isDel: false }).then((result) => {
@@ -144,7 +143,6 @@ const geAllPost = (req, res) => {
     res.status(400).json(error);
   }
 };
-
 
 const getPost = (req, res) => {
   const { _id } = req.params;
@@ -160,7 +158,7 @@ const getPost = (req, res) => {
     res.status(400).json(error);
   }
 };
-
+// حذف الكومنت من البوست
 const deleteCommentOwner = (req, res) => {
   const { postId, commentId } = req.params;
   try {
@@ -186,4 +184,11 @@ const deleteCommentOwner = (req, res) => {
   }
 };
 
-module.exports = { newPost, softDel, updatePost, geAllPost, getPost,deleteCommentOwner };
+module.exports = {
+  newPost,
+  softDel,
+  updatePost,
+  geAllPost,
+  getPost,
+  deleteCommentOwner,
+};

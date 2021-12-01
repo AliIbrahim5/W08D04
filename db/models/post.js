@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+// سكيما البوست ومرتبط مع اليوزر والكومنت
 const post = new mongoose.Schema({
   img: { type: String },
   desc: { type: String, require: true },

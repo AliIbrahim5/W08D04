@@ -11,10 +11,13 @@ const {
 const authentication = require("./../middleware/authentication");
 const authorization = require("./../middleware/authorization");
 
-
+// تسجيل حساب جديد
 userRoute.post("/resgister", resgister);
+// تسجيل دخول 
 userRoute.post("/login", login);
+// اظهار جميع الحسابات للادمن
 userRoute.get("/allusers", authentication, authorization, getalluser);
+// حذف الحساب المراد عن طريق ايدي الحساب للادمن
 userRoute.delete("/userdelet/:_id", authentication, authorization, deletuser);
 
 module.exports = userRoute;

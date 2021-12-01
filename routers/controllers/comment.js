@@ -1,7 +1,9 @@
+
+// ريكواير لجميع المودل المرتبطة في الكومنت
 const commentModel = require("../../db/models/comment");
 const postModel = require("../../db/models/post");
 const likeModel = require("../../db/models/like");
-
+// كتابة تعليق جديد
 const newComment = (req, res) => {
   const { desc } = req.body;
   const { userId, postId } = req.params;
@@ -24,7 +26,7 @@ const newComment = (req, res) => {
     res.status(400).send(error);
   }
 };
-
+// لحذف التعليق 
 const deleteCommet = (req, res) => {
   const { _id } = req.params;
   try {
@@ -67,7 +69,7 @@ const deleteCommet = (req, res) => {
     res.status(400).json(error);
   }
 };
-
+// التعديل على التعليق 
 const updateComment = (req, res) => {
   const { _id } = req.params;
   const { desc } = req.body;
@@ -110,7 +112,7 @@ const updateComment = (req, res) => {
     res.status(404).json(error);
   }
 };
-
+// اظهار التعليق 
 const getComment = (req, res) => {
   const { _id } = req.params;
   try {
@@ -125,7 +127,7 @@ const getComment = (req, res) => {
     res.status(400).json(error);
   }
 };
-
+// اظهار البوست مع الكومنت
 const getPostWithComments = (req, res) => {
   const { _id } = req.params;
   try {

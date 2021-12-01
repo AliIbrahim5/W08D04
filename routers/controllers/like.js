@@ -1,6 +1,6 @@
 const likeModel = require("../../db/models/like");
 
-// Toggle like
+// وضع لايك على البوست عن طريق ايدي الويزر مع ايدي البوست
 const newLike = (req, res) => {
   const { userId, postId } = req.params;
   try {

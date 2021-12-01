@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const commentRouter = express.Router();
 const authentication = require("./../middleware/authentication");
@@ -10,11 +12,14 @@ const {
   getComment,
   getPostWithComments
 } = require("../controllers/comment");
-
+// باث التعليق الجديد عن طريق ايدي اليوزر و ايدي البوست
 commentRouter.post("/newComment/:userId/:postId", newComment);
+// حذف تعليق عن طريق ايدي التعليق 
 commentRouter.delete("/deletecomment/:_id", authentication, deleteCommet);
+// التعديل على التعليق عن طريق الايدي
 commentRouter.put("/updatecomment/:_id", authentication, updateComment);
 commentRouter.get("/getComment/:_id", getComment);
+// اظهار الكومن عن طريق الايدي
 commentRouter.get("/getPostWithComments/:_id", getPostWithComments);
 
 module.exports = commentRouter;
