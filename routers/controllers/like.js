@@ -1,39 +1,32 @@
 const likeModel = require("../../db/models/like");
-const roleModel = require("../../db/models/role");
 
+// Toggle like
+const newLike = (req, res) => {
+  const { userId, postId } = req.params;
+  try {
+    likeModel
+      .findOneAndDelete({ $and: [{ post: postId }, { user: userId }] })
+      .then((item) => {
+        if (item) {
+          res.status(200).send("like deleted");
+        } else {
+          const newLike = new likeModel({
+            user: userId,
+            post: postId,
+          });
+          newLike
+            .save()
+            .then((result) => {
+              res.status(200).json(result);
+            })
+            .catch((err) => {
+              res.status(400).send(err);
+            });
+        }
+      });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
 
-const likeAndDelet = async(req, res) => {
-    const { id } = req.params;
-    const { like } = req.body;
-    let sameUser = false;
-  
-    likeModel.findOne({ _id: id, user: req.token.id }).then((result) => {
-      console.log(result);
-      if (result) {
-        sameUser = true;
-        console.log(sameUser);
-      }
-    });
-  
-    const result = await roleModel.findById(req.token.role);
-  
-   
-    if (result.role == "admin" || sameUser) {
-      postModel
-        .findByIdAndUpdate(id, { $set: { desc: desc, img: img } })
-        .then((result) => {
-          if (result) {
-            res.status(200).json("post updated");
-          } else {
-            res.status(404).json("post does not exist");
-          }
-        })
-        .catch((err) => {
-          res.status(400).json(err);
-        });
-    } else {
-      res.json("you don't have the priveleges to update the post");
-    }
-  };
-
-  module.exports = {  likeAndDelet};
+module.exports = { newLike };

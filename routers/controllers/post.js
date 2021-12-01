@@ -1,116 +1,189 @@
-const postModel = require("../../db/models/post");
-const roleModel = require("../../db/models/role");
+const postmodel = require("../../db/models/post");
 
-const getPosts = (req, res) => {
-  postModel
-    .find({})
-    // .find({ isDeleted: false, user: req.token.id })
-    .then((result) => {
-      if (result) {
+
+const newPost = (req, res) => {
+  const { img, desc } = req.body;
+  const { _id } = req.params;
+  try {
+    const newPost = new postmodel({
+      img,
+      desc,
+      time: Date(),
+      user: _id,
+    });
+    newPost
+      .save()
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+
+// soft delete post
+const softDel = (req, res) => {
+  const { _id } = req.params;
+  try {
+    postmodel.findOne({ _id: _id }).then((item) => {
+      if (item.user == req.token._id) {
+        postmodel.findById({ _id: _id }).then((item) => {
+          if (item.isDel == false) {
+            postmodel
+              .findByIdAndUpdate(
+                { _id: _id },
+                { $set: { isDel: true } },
+                { new: true }
+              )
+              .then((result) => {
+                res.status(200).json(result);
+              })
+              .catch((err) => {
+                res.status(400).json(err);
+              });
+          } else {
+            postmodel
+              .findByIdAndUpdate(
+                { _id: _id },
+                { $set: { isDel: false } },
+                { new: true }
+              )
+              .then((result) => {
+                res.status(200).json(result);
+              })
+              .catch((err) => {
+                res.status(400).json(err);
+              });
+          }
+        });
+      } else if (req.token.role == "61a734cd947e8eba47efbc68") {
+        postmodel.findById({ _id: _id }).then((item) => {
+          if (item.isDel == false) {
+            postmodel
+              .findByIdAndUpdate(
+                { _id: _id },
+                { $set: { isDel: true } },
+                { new: true }
+              )
+              .then((result) => {
+                res.status(200).json(result);
+              })
+              .catch((err) => {
+                res.status(400).json(err);
+              });
+          } else {
+            postmodel
+              .findByIdAndUpdate(
+                { _id: _id },
+                { $set: { isDel: false } },
+                { new: true }
+              )
+              .then((result) => {
+                res.status(200).json(result);
+              })
+              .catch((err) => {
+                res.status(400).json(err);
+              });
+          }
+        });
+      } else {
+        res.status(403).send("Forbidden");
+      }
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+// epdate post
+const updatePost = (req, res) => {
+  const { _id } = req.params;
+  const { desc } = req.body;
+  try {
+    postmodel.findOne({ _id: _id }).then((item) => {
+      // console.log("Update token ", req.token);
+      if (item.user == req.token._id) {
+        postmodel
+          .findOneAndUpdate(
+            { _id: _id },
+            { $set: { desc: desc, time: Date() } },
+            { new: true }
+          )
+          .then((result) => {
+            res.status(200).json(result);
+          });
+      } else if (req.token.role == "61a734cd947e8eba47efbc68") {
+        postmodel
+          .findOneAndUpdate(
+            { _id: _id },
+            { $set: { desc: desc, time: Date() } },
+            { new: true }
+          )
+          .then((result) => {
+            res.status(200).json(result);
+          });
+      } else {
+        res.status(403).send("forbbiden");
+      }
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+// get post all
+const geAllPost = (req, res) => {
+  try {
+    postmodel.find({ isDel: false }).then((result) => {
+      res.status(200).json(result);
+    });
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+
+
+const getPost = (req, res) => {
+  const { _id } = req.params;
+  try {
+    postmodel.findOne({ _id: _id }).then((result) => {
+      if (result.isDel == false) {
         res.status(200).json(result);
       } else {
-        res.status(404).json("no posts found");
+        res.status(404).send("Post deleted");
       }
-    })
-    .catch((err) => {
-      res.status(400).json(err);
     });
-};
-
-const createPost = (req, res) => {
-  const { desc, img, isDeleted } = req.body;
-  const newPost = new postModel({ desc, img, isDeleted, user: req.token.id });
-  newPost
-    .save()
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-};
-
-const getPostById = async(req, res) => {
-  const { id } = req.params;
-  postModel
-    .find({ _id: id })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
-};
-
-const deletePost = async(req, res) => {
-  const { id } = req.params;
-  let sameUser = false;
-
-  await postModel.findOne({ _id: id, user: req.token.id }).then((result) => {
-    if (result) {
-      sameUser = true;
-    }
-  });
-
-
-  const result = await roleModel.findById(req.token.role);
-
-  //here we check if it's Admin user OR the same user who created the post
-  if (result.role == "admin" || sameUser) {
-    postModel
-      .findByIdAndUpdate(id, { $set: { isDeleted: true } })
-      .then((result) => {
-        if (result) {
-          res.status(200).json("post removed");
-        } else {
-          res.status(404).json("post does not exist");
-        }
-      })
-      .catch((err) => {
-        res.status(400).json(err);
-      });
-  } else {
-    res.json("you don't have the priveleges to remove the post");
+  } catch (error) {
+    res.status(400).json(error);
   }
 };
 
-const updatePost = async(req, res) => {
-  const { id } = req.params;
-  const { desc, img } = req.body;
-  let sameUser = false;
-
-  await postModel.findOne({ _id: id, user: req.token.id }).then((result) => {
-    console.log(result);
-    if (result) {
-      sameUser = true;
-    
-    }
-  });
-
-  const result = await roleModel.findById(req.token.role);
-
-  //here we check if it's Admin user OR the same user who created the post
-  if (result.role == "admin" || sameUser) {
-    postModel
-      .findByIdAndUpdate(id, { $set: { desc: desc, img: img } })
-      .then((result) => {
-        if (result) {
-          res.status(200).json("post updated");
+const deleteCommentOwner = (req, res) => {
+  const { postId, commentId } = req.params;
+  try {
+    postModel.findOne({ _id: postId }).then((item) => {
+      if (item) {
+        if (item.user == req.token._id) {
+          commentModel.findOneAndDelete({ _id: commentId }).then((result) => {
+            if (result) {
+              res.status(200).send("Delete comment succefullty");
+            } else {
+              res.status(404).send("Comment not found");
+            }
+          });
         } else {
-          res.status(404).json("post does not exist");
+          res.status(403).send("Forbidden");
         }
-      })
-      .catch((err) => {
-        res.status(400).json(err);
-      });
-  } else {
-    res.json("you don't have the priveleges to update the post");
+      } else {
+        res.status(404).send("Post not found");
+      }
+    });
+  } catch (error) {
+    res.status(400).json(error);
   }
 };
 
-
-
-
-
-
-module.exports = { getPosts, getPostById, createPost, updatePost, deletePost};
+module.exports = { newPost, softDel, updatePost, geAllPost, getPost,deleteCommentOwner };

@@ -16,7 +16,7 @@ const roleRouter = require("./routers/routes/role");
 
 const userRoute = require("./routers/routes/user");
 
-const postRouter = require("./routers/routes/post");
+const postsRouter = require("./routers/routes/post");
 
 const likeRouter = require("./routers/routes/like");
 
@@ -24,7 +24,7 @@ app.use(roleRouter);
 
 app.use(userRoute);
 
-app.use(postRouter);
+app.use(postsRouter);
 
 app.use(likeRouter);
 

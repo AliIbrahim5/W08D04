@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 
-
 const comment = new mongoose.Schema({
-  comment: { type: String, required: true },
-  isDeleted: { type: Boolean, default: false },
+  desc: { type: String, require: true },
+  time: { type: Date },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-},
-{timestamps: true}
-);
-
+  post: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
+});
 
 module.exports = mongoose.model("Comment", comment);
