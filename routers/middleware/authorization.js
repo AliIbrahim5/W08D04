@@ -1,20 +1,17 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const roleModel = require("../../db/models/role");
 
-const SECRET = process.env.SECRET;
-
-const authentication = (req, res, next) => {
+const authorization = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) {
-      return res.status(403).json({ message: "forbidden" });
+    const roleID = req.token.role;
+    const result = await roleModel.findById(roleID);
+    if (result.role === "admin") {
+      next();
+    } else {
+      res.status(403).json("forbidden");
     }
-    const token = req.headers.authorization.split(" ")[1];
-    const parsedToken = jwt.verify(token, SECRET);
-    req.token = parsedToken;
-    next();
   } catch (err) {
     res.status(403).json(err);
   }
 };
 
-module.exports = authentication;
+module.exports = authorization;

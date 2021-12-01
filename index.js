@@ -12,17 +12,17 @@ dotenv.config();
 const db = require("./db/index");
 app.use(express.json());
 
-const roleRouter = require("./routers/routes/role");
+// const roleRouter = require("./routers/routes/role");
 
-const userRoute = require("./routers/routes/user");
+// const userRoute = require("./routers/routes/user");
 
-const taskRouter = require("./routers/routes/task");
+// const taskRouter = require("./routers/routes/task");
 
-app.use(roleRouter);
+// app.use(roleRouter);
 
-app.use(userRoute);
+// app.use(userRoute);
 
-app.use(taskRouter);
+// app.use(taskRouter);
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
