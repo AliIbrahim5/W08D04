@@ -1,84 +1,99 @@
-const usermodel = require("../../db/models/user");
+const userModel = require("../../db/models/user");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const salt = Number(process.env.SALT);
-const secret = process.env.SECRET;
+var jwt = require("jsonwebtoken");
+
 const resgister = async (req, res) => {
-  const { email, password, role } = req.body;
-
-  const savedEmail = email.toLowerCase();
-  const savedPassword = await bcrypt.hash(password, salt);
-
-  const newuser = new usermodel({
-    email: savedEmail,
-    password: savedPassword,
-    role,
-  });
-  newuser
-    .save()
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.send(err);
+    const { username, email, password, role } = req.body;
+  
+    const SALT = Number(process.env.SALT);
+    const savedEmail = email.toLowerCase();
+    const hashedPassword = await bcrypt.hash(password, SALT);
+    const newUser = new userModel({
+      username: username,
+      email: savedEmail,
+      password: hashedPassword,
+      role,
     });
-};
-
-
-const login = (req, res) => {
-  const { email, password } = req.body;
-  const savedEmail = email.toLowerCase();
-
-  usermodel
-    .findOne({ email: savedEmail })
-
-    .then(async (result) => {
-      if (result) {
-        if (result.email == email) {
-          const savedPassword = await bcrypt.compare(password, result.password);
-          const payload = {
-            role: result.role,
-            id: result._id,
-          };
-
-          if (savedPassword) {
-            let token = jwt.sign(payload, secret);
-            res.status(200).json({ result, token });
+  
+    newUser
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  };
+  const login = (req, res) => {
+    const { username, email, password } = req.body;
+    const SECRET_KEY = process.env.SECRET_KEY;
+    const savedEmail = email?.toLowerCase();
+    userModel
+      .findOne({$or: [
+        {email:savedEmail},
+        {username}
+    ]}).then(async (result) => {
+        if (result) {
+          if (savedEmail === result.email || username === result.username) {
+            const payload = {
+              id: result._id,
+              role: result.role,
+            };
+            const options = {
+              expiresIn: 60 * 60,
+            };
+            const token = jwt.sign(payload, SECRET_KEY, options);
+            const unhashPassword = await bcrypt.compare(
+              password,
+              result.password
+            );
+            if (unhashPassword) {
+              res.status(200).json({result, token});
+            } else {
+              res.status(400).json("invalid email or password");
+            }
           } else {
-            res.status(400).json("Wrong email or password");
+            res.status(400).json("invalid email or password");
           }
         } else {
-          res.status(400).json("Wrong email or password");
+          res.status(400).json("email does not exist");
         }
-      } else {
-        res.status(404).json("Email not exist");
-      }
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-};
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  };
 
-const getalluser = (req, res) => {
-  usermodel
+  const getalluser = (req, res) => {
+    userModel
     .find({})
     .then((result) => {
-      res.json(result);
+      res.status(200).json(result);
     })
     .catch((err) => {
-      res.json(err);
+      res.status(400).json(err);
     });
+  };
+
+  const deletuser = (req, res) => {
+    const { id } = req.params;
+    userModel
+      .findByIdAndUpdate(id, { $set: { isDeleted: true } })
+      .then((result) => {
+        if (result) {
+          res.status(200).json("user removed");
+        } else {
+          res.status(404).json("user does not exist");
+        }
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
 };
-const deletuser = (req, res) => {
-  const { _id } = req.params;
-  taskmodel
-    .findByIdAndDelete({ _id })
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => {
-      res.json(err);
-    });
-};
+
+
+
+
+
 
 module.exports = { resgister, login, getalluser, deletuser };
