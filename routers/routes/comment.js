@@ -13,13 +13,13 @@ const {
   getPostWithComments
 } = require("../controllers/comment");
 // باث التعليق الجديد عن طريق ايدي اليوزر و ايدي البوست
-commentRouter.post("/newComment/:userId/:postId", newComment);
+commentRouter.post("/newComment", newComment);
 // حذف تعليق عن طريق ايدي التعليق 
 commentRouter.delete("/deletecomment/:_id", authentication, deleteCommet);
 // التعديل على التعليق عن طريق الايدي
 commentRouter.put("/updatecomment/:_id", authentication, updateComment);
-commentRouter.get("/getComment/:_id", getComment);
-// اظهار الكومن عن طريق الايدي
+commentRouter.get("/getComment", getComment);
+// اظهار اللايك عن طريق البوست والكومنتات بستخدام ايدي البوست
 commentRouter.get("/getPostWithComments/:_id", getPostWithComments);
 
 module.exports = commentRouter;

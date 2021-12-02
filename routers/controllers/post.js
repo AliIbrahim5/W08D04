@@ -28,6 +28,7 @@ const softDel = (req, res) => {
   const { _id } = req.params;
   try {
     postmodel.findOne({ _id: _id }).then((item) => {
+      
       if (item.user == req.token._id) {
         postmodel.findById({ _id: _id }).then((item) => {
           if (item.isDel == false) {

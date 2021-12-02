@@ -14,7 +14,7 @@ const {
 // اظهار البوست
 postRouter.get("/post/:_id", getPost);
 // اظهار جميع البوستات
-postRouter.get("/allPost", authentication, authorization, geAllPost);
+postRouter.get("/allPost", authentication, geAllPost);
 // التعديل على البوست
 postRouter.put("/updatePost/:_id", authentication, updatePost);
 // انشاء بوست جديد

@@ -5,14 +5,15 @@ const postModel = require("../../db/models/post");
 const likeModel = require("../../db/models/like");
 // كتابة تعليق جديد
 const newComment = (req, res) => {
-  const { desc } = req.body;
-  const { userId, postId } = req.params;
+  // const { desc } = req.body;
+  // const { userId, postId } = req.params;
+  const { desc,user , post } = req.body;
   try {
     const newComment = new commentModel({
       desc,
       time: Date(),
-      user: userId,
-      post: postId,
+      user: user,
+      post: post,
     });
     newComment
       .save()
@@ -116,7 +117,7 @@ const updateComment = (req, res) => {
 const getComment = (req, res) => {
   const { _id } = req.params;
   try {
-    commentModel.findOne({ _id: _id }).then((result) => {
+    commentModel.find().populate("post").populate("user").then((result) => {
       if (result) {
         res.status(200).json(result);
       } else {

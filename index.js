@@ -21,8 +21,10 @@ const userRoute = require("./routers/routes/user");
 const postsRouter = require("./routers/routes/post");
 // استدعاء ملف لايك من مجلد الروتز
 const likeRouter = require("./routers/routes/like");
+const commentRouter = require("./routers/routes/comment");
 // لتشغيل الرول 
 app.use(roleRouter);
+app.use(commentRouter);
 // لتشغيل اليوزر
 app.use(userRoute);
 // لتشغيل البوست
