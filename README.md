@@ -1,4 +1,14 @@
+
 # W08D04
+
+
+
+
+## ER diagram
+![Untitled Diagram-Page-2 drawio (1)](https://user-images.githubusercontent.com/92247967/145349601-7f6e3580-8053-4e89-9117-81e541f8b081.png)
+
+
+
 ## The packages used
 1- npm i express (To build a backend server)
 
