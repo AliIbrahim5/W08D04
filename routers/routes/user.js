@@ -22,7 +22,7 @@ userRoute.post("/resgister", resgister);
 userRoute.post("/login", login);
 // اظهار جميع الحسابات للادمن
 userRoute.get("/allusers",  getalluser);
-// حذف الحساب المراد عن طريق ايدي الحساب للادمن
+// حذف الحساب المراد عن طريق ايدي الحسابs للادمن
 userRoute.delete("/userdelet/:_id", authentication, authorization, deletuser);
 userRoute.get("/login/err", (req,res)=>res.json({err: 'Incorrect Email/Password'}));
 userRoute.get("/login/success", (req,res)=>res.json({success: 'success'}));
