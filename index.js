@@ -12,6 +12,7 @@ dotenv.config();
 const db = require("./db/index");
 
 app.use(express.json());
+app.use(cors());
 // استدعاء الرول للاندكس عن طريق مجلد الروتز
 const roleRouter = require("./routers/routes/role");
 
@@ -33,7 +34,7 @@ app.use(postsRouter);
 app.use(likeRouter);
 // جلب البورت من  .env  ||  5000وفي حال لم يشتغل نضع     
 const PORT = process.env.PORT || 5000;
-app.use(cors());
+
 
 // لمعرفة مااذا كان السيرفر شغال او لا
 app.listen(PORT, () => {
