@@ -6,14 +6,14 @@ const likeModel = require("../../db/models/like");
 // كتابة تعليق جديد
 const newComment = (req, res) => {
   // const { desc } = req.body;
-  // const { userId, postId } = req.params;
-  const { desc,user , post } = req.body;
+  // const { desc,user , post } = req.body;
+  const { userId, postId } = req.params;
   try {
     const newComment = new commentModel({
       desc,
       time: Date(),
-      user: user,
-      post: post,
+      user: userId,
+      post: postId,
     });
     newComment
       .save()

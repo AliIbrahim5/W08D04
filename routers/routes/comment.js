@@ -13,7 +13,7 @@ const {
   getPostWithComments
 } = require("../controllers/comment");
 // باث التعليق الجديد عن طريق ايدي اليوزر و ايدي البوست
-commentRouter.post("/newComment", newComment);
+commentRouter.post("/newComment/:userId/:postId", newComment);
 // حذف تعليق عن طريق ايدي التعليق 
 commentRouter.delete("/deletecomment/:_id", authentication, deleteCommet);
 // التعديل على التعليق عن طريق الايدي
