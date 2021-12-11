@@ -16,7 +16,7 @@ userRoute.post("/resgister", resgister);
 // تسجيل دخول 
 userRoute.post("/login", login);
 // اظهار جميع الحسابات للادمن
-userRoute.get("/allusers", authentication, authorization, getalluser);
+userRoute.get("/allusers",  getalluser);
 // حذف الحساب المراد عن طريق ايدي الحساب للادمن
 userRoute.delete("/userdelet/:_id", authentication, authorization, deletuser);
 
