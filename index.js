@@ -13,7 +13,7 @@ const db = require("./db/index");
 
 app.use(express.json());
 app.use(cors());
-// استدعاء الرول للاندكس عن طريق مجلد الروتز
+// استدعاء الرfول للاندكس عن طريق مجلد الروتز
 const roleRouter = require("./routers/routes/role");
 
 // استدعاء اليوزر عن طريق ملف اليوزر من مجلد الروتز
