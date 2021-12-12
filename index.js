@@ -8,15 +8,22 @@ const cors = require("cors");
 const app = express();
 // تعمل مثل عمل التشغيل 
 dotenv.config();
+app.use(
+  cors({
+    origin: "http://localhost:3000", 
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+
 // استدعاء ملف الدي بي الى الاندكس
 const db = require("./db/index");
 
 const flash = require("connect-flash");
 const session = require('express-session');
 const passport = require('passport');
-
 app.use(express.json());
-app.use(cors());
+
 require('./config/passport')(passport);
 app.use(
   session({

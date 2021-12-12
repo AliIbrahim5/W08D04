@@ -1,10 +1,9 @@
 module.exports = {
-    ensureAuthenticated: function (req, res, next) {
+    authentication: function (req, res, next) {
         if (req.isAuthenticated()) {
             return next();
         }
-        req.flash('error_msg', 'Please log in first!');
-        res.redirect('/auth/login');
+        res.json({error:'Please log in first!'});
     },
     forwardAuthenticated: function (req, res, next) {
         if (!req.isAuthenticated()) {

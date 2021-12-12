@@ -1,8 +1,6 @@
 const express = require("express");
 const postRouter = express.Router();
-const authentication = require("./../middleware/authentication");
-const authorization = require("./../middleware/authorization");
-
+const {authentication} = require("../../config/checkAuth");
 const {
   newPost,
   softDel,
