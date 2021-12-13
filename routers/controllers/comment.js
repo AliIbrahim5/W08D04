@@ -116,28 +116,37 @@ const updateComment = (req, res) => {
 };
 // اظهار التعليق 
 const getComment = (req, res) => {
-  const { id } = req.params;
-  const { desc, username } = req.body;
-
-  const newComment = new commentModel({
-    desc,
-    user: username,
-    post: id,
-  });
-  newComment
-    .save()
+  commentModel.find({ post: req.body.post }).populate('user')
     .then((result) => {
-      postModel
-        .findByIdAndUpdate(id, { $push: { comment: result._id } })
-        .then((result) => {
-          console.log(result);
-        });
-      res.status(201).json(result);
+      res.send(result);
     })
     .catch((err) => {
-      res.status(400).json(err);
+      res.send(err);
     });
 };
+// const getComment = (req, res) => {
+//   const { id } = req.params;
+//   const { desc, username } = req.body;
+
+//   const newComment = new commentModel({
+//     desc,
+//     user: username,
+//     post: id,
+//   });
+//   newComment
+//     .save()
+//     .then((result) => {
+//       postModel
+//         .findByIdAndUpdate(id, { $push: { comment: result._id } })
+//         .then((result) => {
+//           console.log(result);
+//         });
+//       res.status(201).json(result);
+//     })
+//     .catch((err) => {
+//       res.status(400).json(err);
+//     });
+// };
 // اظهار البوست مع الكومنت
 const getPostWithComments = (req, res) => {
   const { _id } = req.params;
