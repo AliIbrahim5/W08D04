@@ -7,7 +7,7 @@ const OAuth2 = google.auth.OAuth2;
 const SECRET_KEY = process.env.SECRET_KEY;
 const passport = require("passport");
 const SECRET_RESET_KEY = process.env.SECRET_RESET_KEY;
-const CLIENT_URL = "http://localhost:5000"; 
+const CLIENT_URL = "http://localhost:3000"; 
 //  انشاء حساب جديد مع رسالة 
 const resgister = (req, res) => {
   const { username, email, password, password2 } = req.body;
@@ -135,7 +135,7 @@ const resgister = (req, res) => {
 
 // عند نسيان الرقم السري يتم استعادة
 const resetPassword = (req, res) => {
-  const { password, password2 } = req.body;
+  var { password, password2 } = req.body;
   const id = req.params.id;
 
   if (!password || !password2) {
@@ -169,7 +169,6 @@ const resetPassword = (req, res) => {
     });
   }
 };
-
 const gotoReset = (req, res) => {
   const { token } = req.params;
 

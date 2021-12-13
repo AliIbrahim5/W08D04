@@ -16,7 +16,7 @@ postRouter.get("/allPost", authentication, geAllPost);
 // التعديل على البوست
 postRouter.put("/updatePost/:_id", authentication, updatePost);
 // انشاء بوست جديد
-postRouter.post("/newPost/:_id", authentication, newPost);
+postRouter.post("/newPost", authentication, newPost);
 // عمل سوفت دليت للبوست
 postRouter.put("/softDelete/:_id",authentication, softDel);
 // صاحب الحساب يحذف الكومنت 

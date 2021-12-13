@@ -2,31 +2,44 @@ const likeModel = require("../../db/models/like");
 
 // وضع لايك على البوست عن طريق ايدي الويزر مع ايدي البوست
 const newLike = (req, res) => {
-  const { userId, postId } = req.params;
-  try {
-    likeModel
-      .findOneAndDelete({ $and: [{ post: postId }, { user: userId }] })
-      .then((item) => {
-        if (item) {
-          res.status(200).send("like deleted");
-        } else {
-          const newLike = new likeModel({
-            user: userId,
-            post: postId,
+  const { id } = req.params;
+  likeModel
+    .findOne({ user: req.token.id, post: id })
+    .then((found) => {
+      if (found) {
+        //if liked before just change to opposite
+        likeModel
+          .deleteOne({ user: req.token.id, post: id }, { like: !found.like })
+          .then(() => {
+            res.status(201).json("like removed");
+          })
+          .catch((err) => {
+            res.status(400).json(err);
           });
-          newLike
-            .save()
+      } else {
+        //never been liked, do new like
+        const newLike = new likeModel({
+          like: true,
+          user: req.token.id,
+          post: id,
+        });
+        newLike
+        .save()
+        .then((result) => {
+          postModel
+            .findByIdAndUpdate(id, { $push: { like: result._id } })
             .then((result) => {
-              res.status(200).json(result);
-            })
-            .catch((err) => {
-              res.status(400).send(err);
+              console.log(result);
             });
-        }
-      });
-  } catch (error) {
-    res.status(400).send(error);
-  }
+          res.status(201).json(result);
+        })
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
+
+
 
 module.exports = { newLike };

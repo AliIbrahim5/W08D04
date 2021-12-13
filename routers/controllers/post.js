@@ -1,14 +1,14 @@
 const postmodel = require("../../db/models/post");
 // انشاء بوست جديد
 const newPost = (req, res) => {
-  const { img, desc } = req.body;
-  const { _id } = req.params;
+  const { img, desc ,user} = req.body;
+  // const { _id } = req.params;
   try {
     const newPost = new postmodel({
       img,
       desc,
       time: Date(),
-      user: _id,
+      user,
     });
     newPost
       .save()

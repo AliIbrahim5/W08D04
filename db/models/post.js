@@ -7,6 +7,8 @@ const post = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   comment: { type: mongoose.Schema.Types.ObjectId, ref: "Comment" },
   isDel: { type: Boolean, default: false },
+},{
+  timestamps:true,
 });
 
 module.exports = mongoose.model("Post", post);

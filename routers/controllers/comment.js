@@ -5,28 +5,29 @@ const postModel = require("../../db/models/post");
 const likeModel = require("../../db/models/like");
 // كتابة تعليق جديد
 const newComment = (req, res) => {
-  // const { desc } = req.body;
-  // const { desc,user , post } = req.body;
-  const { userId, postId } = req.params;
-  try {
-    const newComment = new commentModel({
-      desc,
-      time: Date(),
-      user: userId,
-      post: postId,
+  const { id } = req.params;
+  const { desc, user } = req.body;
+console.log(id);
+  const newComment = new commentModel({
+    desc,
+    user: user,
+    post: id,
+  });
+  newComment
+    .save()
+    .then((result) => {
+      postModel
+        .findByIdAndUpdate(id, { $push: { desc: result._id } })
+        .then((result) => {
+          console.log(result);
+        });
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
     });
-    newComment
-      .save()
-      .then((result) => {
-        res.status(200).json(result);
-      })
-      .catch((err) => {
-        res.status(400).send(err);
-      });
-  } catch (error) {
-    res.status(400).send(error);
-  }
 };
+
 // لحذف التعليق 
 const deleteCommet = (req, res) => {
   const { _id } = req.params;
@@ -115,18 +116,27 @@ const updateComment = (req, res) => {
 };
 // اظهار التعليق 
 const getComment = (req, res) => {
-  const { _id } = req.params;
-  try {
-    commentModel.find().populate("post").populate("user").then((result) => {
-      if (result) {
-        res.status(200).json(result);
-      } else {
-        res.status(404).send("Comment deleted");
-      }
+  const { id } = req.params;
+  const { desc, username } = req.body;
+
+  const newComment = new commentModel({
+    desc,
+    user: username,
+    post: id,
+  });
+  newComment
+    .save()
+    .then((result) => {
+      postModel
+        .findByIdAndUpdate(id, { $push: { comment: result._id } })
+        .then((result) => {
+          console.log(result);
+        });
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
     });
-  } catch (error) {
-    res.status(400).json(error);
-  }
 };
 // اظهار البوست مع الكومنت
 const getPostWithComments = (req, res) => {
