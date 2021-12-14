@@ -10,7 +10,7 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: "https://frosty-bartik-b632a5.netlify.app", 
+    origin: "http://localhost:3000", 
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   })
