@@ -15,8 +15,8 @@ const {
 } = require("./../controllers/user");
 // const authentication = require("./../middleware/authentication");
 const authorization = require("./../middleware/authorization");
-const {authentication} = require("../../config/checkAuth");
-
+// const {authentication} = require("../../config/checkAuth");
+const {authentication} = require("../../config/checkAuth")
 // تسجيل حساب جديد
 userRoute.post("/resgister", resgister);
 // تسجيل دخول 
